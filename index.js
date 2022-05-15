@@ -122,3 +122,13 @@ const run = async () => {
     // client.close();
   }
 };
+
+run().catch(console.dir);
+
+app.get("/", (req, res) => {
+  res.send("Hello mads World!");
+});
+
+app.listen(port, () => {
+  console.log("Ns Mobile House server running in port", port);
+});
