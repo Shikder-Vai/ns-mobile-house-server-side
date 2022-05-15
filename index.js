@@ -38,7 +38,7 @@ const client = new MongoClient(uri, {
 const run = async () => {
   try {
     await client.connect();
-    const inventoryCollection = client.db("inventory").collection("cars");
+    const inventoryCollection = client.db("inventory").collection("mobiles");
 
     // use jwt
     app.post("/login", (req, res) => {
@@ -51,6 +51,71 @@ const run = async () => {
     app.post("/inventory", verifyJWT, async (req, res) => {
       const newInventory = req.body;
       const result = await inventoryCollection.insertOne(newInventory);
+      res.send(result);
+    });
+
+    // get inventory from db
+    app.get("/mobiles", async (req, res) => {
+      const pageNumber = Number(req.query.pageNumber);
+      const limit = Number(req.query.limit);
+      const count = await inventoryCollection.estimatedDocumentCount();
+      const query = {};
+      const cursor = inventoryCollection.find(query);
+      const mobiles = await cursor
+        .skip(limit * pageNumber)
+        .limit(limit)
+        .toArray();
+      res.send({ mobiles, count });
+    });
+
+    app.get("/mobiles/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const mobile = await inventoryCollection.findOne(query);
+      res.send(mobile);
+    });
+
+    app.get("/myinventory", verifyJWT, async (req, res) => {
+      const decodedEmail = req?.decoded?.email;
+      const email = req?.query?.email;
+      if (email === decodedEmail) {
+        const query = { userEmail: email };
+        const cursor = inventoryCollection.find(query);
+        const mobiles = await cursor.toArray();
+        res.send(mobiles);
+      } else {
+        res.status(403).send({ message: "Forbidden access" });
+      }
+    });
+    // update mobile
+    app.put("/mobiles/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateMobile = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name: updateMobile.name,
+          suplier: updateMobile.suplier,
+          price: updateMobile.price,
+          quantity: updateMobile.quantity,
+          description: updateMobile.description,
+          image: updateMobile.image,
+        },
+      };
+      const result = await inventoryCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(result);
+    });
+
+    // DELETE
+    app.delete("/mobiles/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await inventoryCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
