@@ -26,3 +26,11 @@ function verifyJWT(req, res, next) {
     }
   });
 }
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@nsmobilehouse.r0cka.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
