@@ -34,3 +34,26 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
+
+const run = async () => {
+  try {
+    await client.connect();
+    const inventoryCollection = client.db("inventory").collection("cars");
+
+    // use jwt
+    app.post("/login", (req, res) => {
+      const email = req.body;
+      const token = jwt.sign(email, process.env.SECRET_KEY);
+      res.send({ token });
+    });
+
+    // add inventory
+    app.post("/inventory", verifyJWT, async (req, res) => {
+      const newInventory = req.body;
+      const result = await inventoryCollection.insertOne(newInventory);
+      res.send(result);
+    });
+  } finally {
+    // client.close();
+  }
+};
