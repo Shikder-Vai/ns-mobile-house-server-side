@@ -75,17 +75,18 @@ const run = async () => {
       res.send(mobile);
     });
 
-    app.get("/myinventory", verifyJWT, async (req, res) => {
-      const decodedEmail = req?.decoded?.email;
+    app.get("/myinventory", async (req, res) => {
+      // const decodedEmail = req?.decoded?.email;
       const email = req?.query?.email;
-      if (email === decodedEmail) {
-        const query = { userEmail: email };
-        const cursor = inventoryCollection.find(query);
-        const mobiles = await cursor.toArray();
-        res.send(mobiles);
-      } else {
-        res.status(403).send({ message: "Forbidden access" });
-      }
+      const query = { userEmail: email };
+      const cursor = inventoryCollection.find(query);
+      const mobiles = await cursor.toArray();
+      res.send(mobiles);
+      // if (email === decodedEmail) {
+
+      // } else {
+      //   res.status(403).send({ message: "Forbidden access" });
+      // }
     });
     // update mobile
     app.put("/mobiles/:id", async (req, res) => {
