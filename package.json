@@ -8,8 +8,16 @@
     "start-dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProgrammingHeroWC4/warehouse-management-server-side-Shikder-Vai.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ProgrammingHeroWC4/warehouse-management-server-side-Shikder-Vai/issues"
+  },
+  "homepage": "https://github.com/ProgrammingHeroWC4/warehouse-management-server-side-Shikder-Vai#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
