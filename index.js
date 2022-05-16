@@ -48,7 +48,7 @@ const run = async () => {
     });
 
     // add inventory
-    app.post("/inventory", verifyJWT, async (req, res) => {
+    app.post("/inventory", async (req, res) => {
       const newInventory = req.body;
       const result = await inventoryCollection.insertOne(newInventory);
       res.send(result);
