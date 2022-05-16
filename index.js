@@ -38,7 +38,7 @@ const client = new MongoClient(uri, {
 const run = async () => {
   try {
     await client.connect();
-    const inventoryCollection = client.db("inventory").collection("mobiles");
+    const inventoryCollection = client.db("Inventory").collection("mobiles");
 
     // use jwt
     app.post("/login", (req, res) => {
